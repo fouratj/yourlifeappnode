@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Your Life App</title>
+		<meta name="viewport" content="width=device-width,initial-scale = 1.0,maximum-scale=1.0,user-scalable=no"/>
+		<link rel="stylesheet" href="css/materialize.min.css">
+		<link rel="stylesheet" href="css/style.css">
+		<link async href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link async href='https://fonts.googleapis.com/css?family=Josefin+Slab' rel='stylesheet' type='text/css'>
+		<script src="js/jQuery.js"></script>
+		<script src="js/chart.js"></script>
+		<script async defer src="js/helper.js"></script>
+		<script src="js/jquery.matchHeight.js"></script>
+	</head>
+	<body id="gradient">
+		<header>
+			<div class="navbar-fixed">
+				<nav>
+					<div class="nav-wrapper valign-wrapper">
+						<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="valign material-icons">menu</i></a>
+						<div class="tab center-block">
+							<h4 class="center-block">"Your" Life App</h4>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</header>
+
+		<main style="margin-top: 64px;">
+			<div class="container" id="container">
+				<div>
+					<!-- HOME subtab -->
+					<div>
+						<div class="row" style="height: 100%;">
+							<div class="col s12" style="text-align: center;">
+								<h3 id="title">LOGIN</h3>
+								<form id="login" action="/login" method="post">
+							    <div>
+							        <label>Username:</label>
+							        <input type="text" name="username"/>
+							    </div>
+							    <div>
+							        <label>Password:</label>
+							        <input type="password" name="password"/>
+							    </div>
+							    <div>
+							        <input class="waves-effect waves-light btn-large right" type="submit" value="Log In"/>
+							    </div>
+								</form>
+
+								<form id="register" action="/register" method="post" style="display: none;">
+							    <div>
+							        <label>Choose a Username:</label>
+							        <input type="text" name="username"/>
+							    </div>
+							    <div>
+							        <label>Choose a Password:</label>
+							        <input type="password" name="password"/>
+							    </div>
+							    <div>
+											<button type="submit" class="waves-effect waves-light btn-large right">Register</button>
+							    </div>
+								</form>
+								<br />
+								<br />
+							<!--<a href="/auth/facebook">Login with Facebook</a>-->
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s6 offset-s1">
+								<div class="center-align">
+									<button id="switch" type="button" class="waves-effect waves-light btn-large right">Register?</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+			</div>
+		</main>
+
+		<footer class="footer hide-on-small-only" id='footerwrapper' style="display: hidden;">
+			<div class="container-fluid" id="footer">
+				<div class="row">
+					<div class="col s12 center-align">
+						<p class="white-text center-align">
+							The Track "Your" Life App
+						</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<script src="js/materialize.min.js"></script>
+		<script src="js/velocity.ui.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				$('#switch').click(function() {
+					$('#title').velocity('transition.flipXOut', {
+						duration: 750,
+						complete: function() {$(title).text('REGISTER');}
+					});
+
+					$('#login').velocity('transition.flipXOut', {
+						duration: 750,
+						complete: function() {
+							$('#register').velocity('transition.flipXIn', { duration: 750} )
+
+							$('#title').velocity('transition.flipXIn', { duration: 750 })
+							$('#switch').hide();
+						}
+					});
+					});
+			})
+		</script>
+</body>
+</html>

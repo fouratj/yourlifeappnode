@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Your Life App</title>
+		<meta name="viewport" content="width=device-width,initial-scale = 1.0,maximum-scale=1.0,user-scalable=no"/>
+		<link rel="stylesheet" href="css/materialize.min.css">
+		<link rel="stylesheet" href="css/style.css">
+		<link async href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link async href='https://fonts.googleapis.com/css?family=Josefin+Slab' rel='stylesheet' type='text/css'>
+		<script src="js/jQuery.js"></script>
+		<script src="js/chart.js"></script>
+		<script async defer src="js/helper.js"></script>
+		<script src="js/jquery.matchHeight.js"></script>
+	</head>
+	<body id="gradient">
+		<header>
+			<div class="navbar-fixed">
+				<nav>
+					<div class="nav-wrapper valign-wrapper">
+						<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="valign material-icons">menu</i></a>
+						<div class="tab center-block">
+							<h4 class="center-block">{{ user.username }}'s Life App</h4>
+						</div>
+						<div class="tab">
+							<a class='valign right-align' href="/logout">Logout</a>
+						</div>
+						<ul id="slide-out" class="side-nav red lighten-3">
+							<li id="homelink"><a href="#home"><h5>Home</h5></a></li>
+							<li id="movieslink"><a href="#movies"><h5>Movies</h5></a></li>
+							<li id="tvshowslink"><a href="#tvshows"><h5>TV Shows</h5></a></li>
+							<li id="bookslink"><a href="#books"><h5>Books</h5></a></li>
+							<li id="gameslink"><a href="#games"><h5>Games</h5></a></li>
+							<li id="statslink"><a href="#stats"><h5>Stats</h5></a></li>
+							<li class="no-padding">
+								<ul class="collapsible collapsible-accordion">
+									<li>
+										<a href="#!" class="collapsible-header left-align"><h5>Coming Soon</h5></a>
+										<div class="collapsible-body">
+											<ul class="red lighten-3">
+												<li><a href="#">Fitness</a></li>
+												<li><a href="#">Time at Work</a></li>
+												<li><a href="#">Countries Visited</a></li>
+											</ul>
+										</div>
+									</li>
+								</ul>
+							</li>
+							<!--<li id="settingsLink"><a href="#settings"><h6>Settings</h6></a></li>-->
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</header>
+
+		<main style="margin-top: 64px;">
+			<div class="container" id="container">
+				<div id="tabs">
+					<!-- HOME subtab -->
+					<div id="home">
+						<div class="row" id="homelist" style="height: 100%;">
+							<div class="col s12" id="canvas-container" style="text-align: center;">
+								<canvas id="polar" width="800" height="800" style="display: inline;"></canvas>
+							</div>
+						</div>
+					</div>
+
+					{% for category in categories %}
+						<div id="{{ category }}s" style="display: none;">
+						<div style="border: 0">
+							<div class="row" style="margin-bottom: 40px;">
+								<div class="col s12 m4 offset-m4 text-center">
+									<form class="aform" id="{{category}}form" autocomplete="off" action="/add2db" method="post">
+										<div class="input-field">
+									    	<label for="{{ category }}name" class="validate">What did you watch?</label>
+									    	<input class="empty" type="text" name="name" class="form-control" id="{{ category }}name">
+												<input type="hidden" name="media" value="{{ category }}">
+									  </div>
+										{% if category == "tvshow" %}
+											<div class="input-field">
+									    	<label for="tvshowextra">Which season?</label>
+									    	<input class="empty" type="text" name="extra" class="form-control" id="tvshowextra">
+									  	</div>
+										{% elif category == "game" %}
+										<div class="input-field">
+											<label for="gameextra">For how many hours?</label>
+											<input class="empty" type="text" name="extra" class="form-control" id="gameextra">
+										</div>
+										{% endif %}
+
+										<div class="input-field col s12">
+									  	<button type="submit" class="waves-effect waves-light btn-large right">Save</button>
+										</div>
+									</form>
+								</div>
+								<div class="col m4">
+									<i class="material-icons right" >trending_flat</i>
+								</div>
+							</div>
+						  <div class="row" id='{{ category }}slist' style='margin-bottom: 40px;'>
+								{% for media in medias %}
+									{% if media.type == category  %}
+										<div id="{{ media.name|replace(" ", "")|replace(":", "")|replace("&", "") }}" class="col s12 m4">
+											<div class="card hoverable item">
+												<div class="card-image">
+													{% if category == 'book' %}
+														<img class="responsive-img content activator bookcover" src="{{ media.poster }}" alt="{{ media.name }} Poster">
+													{% elif media.poster %}
+														<img class="responsive-img content activator" src="{{ media.poster }}" alt="{{ media.name }} Poster">
+													{% endif %}
+												</div>
+												<div class="card-content" style="padding: 0">
+													<ul class="collection with-header" style="margin: 0;">
+														<li class="collection-item active center-align">{{ media.name }}</li>
+														<li class="collection-item center-align"> {{ media.runtime }}</li>
+														{% if media.type == "movie" %}
+															<li class="collection-item center-align"> Released: {{ media.release }} </li>
+														{% elif media.type == "book" %}
+															<li class="collection-item center-align"> Published: {{ media.release }} </li>
+														{% elif media.type == "tvshow" %}
+															<li class="collection-item center-align"> Eps watched: {{ media.episodes }} </li>
+														{% endif %}
+													</ul>
+												</div>
+												<div class="card-reveal">
+													<span class="card-title grey-text text-darken-4 center-align">
+														{{ media.name }}
+														<i class="material-icons right">done</i>
+													</span>
+													<p style="max-height: 75%; overflow-y: auto; text-align: justify;">{{ media.synopsis }}</p>
+													<p style="position: fixed; bottom: 40px; left: 0; right: 0; padding-left: 10px; padding-right: 10px;">
+														Watched it again?
+														<a class="watch movie" href="#">
+															<i class="material-icons right">replay</i>
+														</a>
+													</p>
+													<p style="position: fixed; bottom: 0; left: 0; right: 0; padding-left: 10px; padding-right: 10px;">
+														Delete from your list...
+														<a class="delete movie" href="#"><i class="material-icons right">delete</i></a>
+													</p>
+												</div>
+											</div>
+										</div>
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
+						<br>
+					</div>
+					{% endfor %}
+
+					<div id="stats" stlye="display: none">
+						<div class="row" id="statslist" style="margin-top: 10px;">
+							<div class="col s12 m6">
+								<div class="card hoverable materialboxed blue-grey darken-1 item z-depth-3">
+									<div class="card-content white-text">
+								  	<span class="card-title">MOVIES</span>
+								    <p class="text-flow">
+											That's <span class="addcommas">{{ mvCo }}</span> movies, which is <span class="addcommas">{{ mvTT }}</span> hours |
+											 <span class="addcommas">{{ (mvTT * 60)|round|int }}</span> minutes | <span class="addcommas">{{ (mvTT * 3600)|round|int }}</span> seconds...
+										</p>
+								  </div>
+								  <div class="card-action">
+										<p class="text-flow white-text">
+											<!--That's X days, Y weeks, or Z months...-->
+										</p>
+								  </div>
+								</div>
+							</div>
+							<div class="col s12 m6">
+								<div class="card hoverable materialboxed blue-grey darken-1 item z-depth-3">
+								  <div class="card-content white-text">
+								    <span class="card-title">TV SHOWS</span>
+								    <p class="text-flow">
+												You've watched <span class="addcommas">{{ tvCo }}</span> episodes of <span class="addcommas">{{ tvSh }}</span> seasons, which amounts to <span class="addcommas">{{ tvTT }}</span> hours of TV |
+												<span class="addcommas"> {{ (tvTT * 60)|round|int }}</span> minutes | <span class="addcommas"> {{ (tvTT * 3600)|round|int }}</span> seconds...
+										</p>
+								  </div>
+								  <div class="card-action">
+										<p class="text-flow white-text">
+											<!--That's X days, Y weeks, or Z months...-->
+										</p>
+								  </div>
+								</div>
+							</div>
+							<div class="col s12 m6">
+								<div class="card hoverable materialboxed blue-grey darken-1 item z-depth-3">
+									<div class="card-content white-text">
+										<span class="card-title">BOOKS</span>
+										<p class="text-flow">
+											You've read <span class="addcommas">{{ bkCo }}</span> books, which is <span class="addcommas">{{ bkPG }}</span> pages,
+											or roughly <span class="addcommas">{{ bkPG * 250 }}</span> words...
+									</p>
+									</div>
+									<div class="card-action">
+										<p class="text-flow white-text">
+											<!--That'd make a stack of papers XXm (X * 3f) high...-->
+										</p>
+									</div>
+								</div>
+							</div>
+							<div class="col s12 m6">
+								<div class="card hoverable materialboxed blue-grey darken-1 item z-depth-3">
+									<div class="card-content white-text">
+										<span class="card-title">GAMES</span>
+										<p class="text-flow">
+											You've played <span class="addcommas">{{ gmCo }}</span> games for <span class="addcommas">{{ gmTT }}</span> hours, which amounts to
+											<span class="addcommas">{{ gmTT * 60 }}</span> minutes | <span class="addcommas">{{ gmTT * 3600 }}</span> seconds...
+										</p>
+									</div>
+									<div class="card-action">
+										<p class="text-flow white-text">
+											<!--That's X days, Y weeks, or Z months...-->
+										</p>
+									</div>
+								</div>
+							</div>
+							<div class="col s12">
+								<div class="card hoverable materialboxed blue-grey darken-1 item z-depth-3">
+									<div class="card-content white-text">
+										<span class="card-title">TOTAL</span>
+										<p class="text-flow">
+											You've consumed <span class="addcommas"> {{ gmCo + mvCo + tvCo + bkCo }}</span> pieces of media. That comes to a grand total of <span class="addcommas">{{ gmTT + bkPG + mvTT|round|int + tvTT|round|int }}</span> hours, which amounts to
+											<span class="addcommas">{{ ((gmTT + bkPG + mvTT|round|int + tvTT|round|int)) * 60 }}</span> minutes | <span class="addcommas" id="totalsecs">{{ ((gmTT + bkPG + mvTT|round|int + tvTT|round|int)) * 3600 }}</span> seconds...
+										</p>
+									</div>
+									<div class="card-action">
+										<p class="text-flow white-text">
+											That's <span class="addcommas">{{ (((gmTT + bkPG + mvTT|round|int + tvTT|round|int)) / 24)|round(1) }}</span> days,
+											 <span class="addcommas">{{ (((gmTT + bkPG + mvTT|round|int + tvTT|round|int)) / 24 / 7)|round(1) }}</span> weeks,
+											 or <span class="addcommas">{{ (((gmTT + bkPG + mvTT|round|int + tvTT|round|int)) / 24 / 7 / 4)|round(1) }}</span> months of content...
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</main>
+
+		<footer class="footer hide-on-small-only" id='footerwrapper' style="display: hidden;">
+			<div class="container-fluid" id="footer">
+				<div class="row">
+					<div class="col s12 m12 l12">
+						<div class="col s12 m6">
+							<ul id="topContacts" class="flex-box">
+								<span class="orange-text">Movies:</span>
+								<span class="white-text" data-container="body" data-toggle="popover" data-placement="top" data-content="That's {{ mvCo }} movies">
+									<span class="addcommas" id="moviehours">{{ mvTT }}</span><span> hours</span>
+								</span>
+								<span class="orange-text">TV Shows:</span>
+								<span class="white-text" data-container="body" data-toggle="popover" data-placement="top" data-content="That's {{ tvCo }} episodes">
+									<span class="addcommas" id="tvshowhours">{{ tvTT }}</span> hours
+								</span>
+							</ul>
+						</div>
+						<div class="col s12 m6">
+							<ul class="flex-box">
+								<span class="orange-text">Books:</span>
+								<span class="white-text" data-container="body" data-toggle="popover" data-placement="top" data-content="That's {{ bkCo }} books">
+									<span class="addcommas" id="bookpages">{{ bkPG }}</span> pages
+								</span>
+								<span class="orange-text">Games:</span>
+								<span class="white-text" data-container="body" data-toggle="popover" data-placement="top" data-content="That's {{ gmCo }} games">
+									<span class="addcommas" id="gamehours">{{ gmTT }}</span> hours
+								</span>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<script src="js/materialize.min.js"></script>
+		<script src="js/velocity.ui.min.js"></script>
+		<script>
+			/*
+				$('.addcommas').each(function() {
+						let toAdd = $(this).text();
+						$(this).text(addCommas(toAdd));
+				});
+				*/
+		</script>
+		<script>
+			/*
+			$('.delete').click(function(event) {
+					event.preventDefault();
+					var media = "", season = "";
+					//console.log(this);
+					if ( $(this).hasClass("movie")) {
+						media = "movie";
+					} else if ( $(this).hasClass("tvshow")) {
+						media = "tvshow";
+					} else if ($(this).hasClass("game")) {
+						media = "game";
+					} else if ($(this).hasClass("book")) {
+						media = "book";
+					}
+					var name = $(this).parentsUntil('.col').find('.active').text();
+					console.log(escape(name));
+					forDeletion = "media=" + media + "&name=" + escape(name);
+					if (media === "tvshow") {
+						var tvshowname = name.replace(/ |&|:|./g, "");
+						season = $(this).parentsUntil('.col').find('.active').next().text();
+						forDeletion += "&season=" + season;
+						console.log(season);
+					}
+					$.ajax({
+						type: 'get',
+						url: '/delete',
+						data: forDeletion,
+						success: function(response) {
+							console.log(media);
+							console.log(name);
+							$('#' + name.replace(/ |&|:|./g, "")).velocity("transition.fadeOut", {duration: 4500});
+							//$('#' + name).remove();
+							$('.item').matchHeight();
+							}
+					});
+			})
+			*/
+		</script>
+		<script>
+			$('.aform').submit(function(event) {
+				event.preventDefault();
+				var that = this;
+				var id = $(this).attr('id');
+				var posting = $.post("/add2db", $(that).serialize() );
+
+				posting.done(function () {
+					$('#' + id).find('.empty').each(function() {$(this).val('')})
+					$('#' + id).velocity("transition.slideRightBigOut", { duration: 250 });
+					$('#' + id).velocity("transition.slideLeftBigIn", {duration: 500});
+					/*
+					var getting = $.post("/get"+id, function(data) {
+						//creates temporary entry until next page refresh
+						let textdecorator1 = "";
+						let textdecorator2 = "";
+						switch (id) {
+							case "movies":
+								textdecorator1 = "minutes";
+								textdecorator2 = "Released:";
+								break;
+							case "tvshows":
+								textdecorator1 = "Season:";
+								textdecorator2 = "Eps watched:";
+								break;
+							case "books":
+								textdecorator1 = "pages";
+								textdecorator2 = "Published:";
+								break;
+							case "games":
+								textdecorator1 = "Played:";
+								textdecorator2 = "";
+								break;
+						}
+
+						var response = data;
+						let name = response.name, length = response.length, release = response.released;
+						let synopsis = response.synopsis, poster = response.poster;
+						var divCol = document.createElement("div");
+						var divCard = document.createElement("div");
+						var divPoster = document.createElement("div");
+						var divBody = document.createElement("div");
+						var mposter = document.createElement("img");
+						var ul = document.createElement('ul');
+						var l1 = document.createElement('li');
+						var l2 = document.createElement('li');
+						var l3 = document.createElement('li');
+						l1.id = "updateP1";
+						l2.id = "updateP2";
+						l3.id = "updateP3";
+
+						var col1 = document.createTextNode(name);
+						col2 = document.createTextNode(length + " " + textdecorator1);
+						col3 = document.createTextNode(textdecorator2 + " " + release);
+
+						mposter.src = poster;
+						mposter.alt = name + " Poster";
+						mposter.id = "updateImg";
+						divCol.id = "updateCol";
+						divCard.id = "updateCard";
+						divPoster.id = "updatePoster";
+						divBody.id = "updateBody";
+						ul.id = "updateUL";
+
+						divCol.appendChild(divCard);
+						divCard.appendChild(divPoster);
+						divCard.appendChild(divBody);
+						divPoster.appendChild(mposter);
+						ul.appendChild(l1);
+						ul.appendChild(l2);
+						ul.appendChild(l3);
+						l1.appendChild(col1);
+						l2.appendChild(col2);
+						l3.appendChild(col3);
+
+						$('#' + id + 'list').prepend(divCol);
+						$('#updateCol').addClass("col s12 m4");
+						$('#updateCard').addClass("card hoverable item");
+						$('#updatePoster').addClass("card-image");
+						$('#updateBody').addClass("card-content");
+						$('#updateImg').addClass("responsive-img");
+						$('#updateBody').append(ul);
+						$('#updateUL').addClass("collection with-header");
+						$('#updateP1').addClass('collection-item active center-align');
+						$('#updateP2').addClass('collection-item center-align');
+						$('#updateP3').addClass('collection-item center-align');
+						$('#updateBody').css("padding", 5);
+						$('#' + id + 'list').velocity("transition.slideUpBigIn", {duration: 500});
+						$('#' + id + 'form').velocity("transition.slideUpBigIn", { duration: 250 });
+						//matches all heights;
+						$('.item').matchHeight();
+					});
+
+
+					getting.fail(function(data) {
+						$('#' + id + 'form').velocity("transition.slideUpBigIn", { duration: 0 });
+						$('#' + id + 'form').velocity("callout.shake", { duration: 250 });
+						$('#' + id + 'list').velocity("transition.slideUpBigIn", { duration: 0 });
+					});
+					*/
+				});
+
+				posting.fail(function(){
+					//$('#' + id + 'form').velocity("callout.shake", { duration: 250 });
+				});
+			});
+		</script>
+		<script>
+			$('.tab').click(function() {
+				var that = $(this).text().toLowerCase().replace(/ /, "");
+				$( "#" + that  + 'list' ).velocity("transition.slideUpBigIn", {duration: 750});
+			});
+			$(document).ready(function() {
+				var options = {};
+				var tabs = ["movies", "tvshows", "games", "books", "stats", "settings"];
+				tabs.forEach(function(item) {
+						$('#' + item).hide();
+				});
+				$('#title').velocity("transition.slideDownBigIn", {duration: 1500 });
+				$('#navbar').velocity( "transition.slideUpBigIn", { duration: 1500 });
+				$('#footerwrapper').velocity( "transition.slideUpBigIn", { duration: 1500 });
+				$('.item').matchHeight();
+				$('.bookcover').matchHeight();
+				$(".button-collapse").sideNav();
+				$('header .navbar-fixed').pushpin({ top: $('.navbar-fixed').offset().top });
+			})
+
+			$('nav div ul li').click(function() {
+				$('ul.tabs').tabs('select_tab', this.id.replace("link", ""));
+				$('#' + this.id.replace("link", "")).show();
+				hide(this.id.replace("link",""))
+			});
+			function hide(x) {
+				var tabs = ["home", "movies", "tvshows", "games", "books", "stats", "settings"];
+				tabs.forEach(function(item) {
+					if (item === x) {return}
+					$('#' + item).hide();
+					$('.button-collapse').sideNav('hide');
+				});
+			};
+
+		</script>
+
+		<script src="js/circles.js"></script>
+</body>
+</html>

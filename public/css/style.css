@@ -1,0 +1,245 @@
+* {
+  font-family: 'Josefin Slab', serif;
+}
+
+body {
+  /*background-color: 92DCE0;*/
+  line-height: 20px;
+  font-size: 18px;
+  overflow-x: hidden;
+  margin-bottom: 0px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 61px;
+  background-color: #f5f5f5;
+}
+
+.banner {
+  /*background-color: #202020;*/
+  background-color: #90C3D4;
+}
+
+.well {
+    background: #C3DAE3;
+}
+
+#footer {
+  background-color: #202020;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+#bodytext {
+  background-color: F2F3F4;
+}
+
+.flex-box {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding-top: 5px;
+  padding-left: 5px;
+}
+
+.orange-text {
+  color: #f5ae23;
+}
+
+.white-text {
+  font-weight: bold;
+  color: #fff;
+  margin-left: 5px;
+}
+
+#gradient {
+    /*background-image: linear-gradient(to right, #ffffff 0%, #8B8C89 100%);*/
+    	background: linear-gradient(90deg, #A8F58E 50%, #8EDBF5 50%);
+}
+
+#gradient2 {
+    background-image: linear-gradient(to bottom, #080000 0%, #ffffff 50%);
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    font-size: 20px;
+  }
+
+  #wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled {
+    padding-left: 250px;
+}
+
+#sidebar-wrapper {
+    z-index: 0; /*1000;*/
+    position: fixed;
+    left: 250px;
+    width: 0;
+    height: 399px;
+    margin-left: -250px;
+    margin-top: 0px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    background: #ffffff;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    border-radius: 5px;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    width: 250px;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    position: absolute;
+    padding-left: 0px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: -250px;
+    padding-left: 0px;
+}
+
+/* Sidebar Styles */
+
+.sidebar-nav {
+    position: absolute;
+    top: 250;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #999999;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+    color: #999999;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+    color: #fff;
+    background: none;
+}
+
+.sidebar-sub {
+    padding-left: 15px;
+}
+
+@media(min-width:768px) {
+    #wrapper {
+        padding-left: 250px;
+    }
+
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+
+    #sidebar-wrapper {
+        width: 250px;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        padding: 0px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}
+
+.side-by-side {
+  width: 100%;
+  height:22px;
+}
+
+.side-by-side li {
+  display: inline;
+  padding-left: 1.00cm;
+  height:22px;
+}
+
+.li1 {
+    background-image: url('images/user.png');
+    background-repeat: no-repeat;
+    background-size: 35px 35px;
+    background-position: left -2px bottom -11px;
+    float: left;
+
+}
+
+.li2 {
+   background-image: url('images/lock-unlock.png') ;
+   background-repeat: no-repeat;
+   background-size:35px 35px;
+   background-position: right -2px bottom -11px;
+   float:right;
+   height:22px;
+}
+
+.li2 span {
+  position: relative;
+  right: 35px;
+}
+.li1 span {
+  position: relative;
+  left: 0px;
+}
+
+@media only screen and (max-width : 767px) {
+    .item {
+        height: auto !important;
+    }
+}
