@@ -8,7 +8,6 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/users');
-//mongoose.connect('mongodb://user:fouratj@jello.modulusmongo.net:27017/iseTu4ty')
 var igdb = require('igdb-api-node');
 var igDB = require('igdb-wrapper-node');
   // my modules
