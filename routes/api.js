@@ -1,4 +1,4 @@
-var mdb = require('moviedb')('83e042991949ef7ee9683a5682d8fd7e');
+var mdb = require('moviedb')('');
 var books = require('google-books-search');
 var posterURI = "http://image.tmdb.org/t/p/w300";
 var mydb = require('./db');
@@ -65,10 +65,6 @@ module.exports = {
           current.synopsis = result.description;
           console.log(current);
           callback(current)
-          //MongoClient.connect(url, function(err, db) {
-            //insertDocument(db, current, current.type, function() { db.close() });
-          //mydb.insert(current);
-          //});
         });
       } else {
         console.log(err)
