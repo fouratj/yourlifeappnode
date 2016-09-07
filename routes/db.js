@@ -2,7 +2,7 @@ var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var url = 'mongodb://localhost:27017/test';
-//var url = 'mongodb://user:fouratj@jello.modulusmongo.net:27017/nusAb3uh'
+
 
 module.exports = {
   insert: function(data) {
